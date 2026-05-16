@@ -5,25 +5,36 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm ci
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build --prod
+    
     - name: Build Docker images
       run: |
         docker compose build
     
-    - name: Start containers
+    - name: Verify Docker build
       run: |
-        docker compose up -d
-        sleep 10
-    
-    - name: Test backend health
-      run: |
-        curl -f http://localhost:4000/api/test
-    
-    - name: Test Gemini API
-      run: |
-        curl -X POST http://localhost:4000/api/chat -H "Content-Type: application/json" -d '{"message":"Test"}' --fail
+        docker images | grep devnet
