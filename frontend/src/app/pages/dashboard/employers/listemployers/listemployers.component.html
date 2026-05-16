@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Users Grid</h4>
+
+            <div class="page-title-right">
+                <button routerLink="/dashboard/employers/ajout" class="btn btn-primary">Create</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+
+   @for(employer of employers; track employer._id){
+    <div class="col-xl-3 col-sm-6">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="avatar-sm mx-auto mb-4">
+                    <span
+                        class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-16">
+                        <img  [src]="'http://127.0.0.1:4000/files/' + employer.image"
+                            class="w-100 rounded-circle" alt="">
+                    </span>
+                </div>
+                <h5 class="font-size-15 mb-1"><a class="text-dark"> {{ employer.fullname }} </a></h5>
+                <p class="text-muted"> {{employer.email}}  </p>
+
+                <div>
+                    @for(tag of employer.tags; track tag){
+                        <a href="javascript: void(0);" class="badge bg-primary font-size-11 m-1">{{tag}}</a>
+                    }
+                         
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top">
+                <div class="contact-links d-flex font-size-20">
+                    <div class="flex-fill w-50">
+                        <a href="javascript: void(0);">{{ employer.tel }} </a>
+                    </div>
+                    <div class="flex-fill">
+                        <a [routerLink]="['/dashboard/employers/update', employer._id ]" ><i
+                                class="bx bx-pencil"></i></a>
+                    </div>
+                    <div class="flex-fill">
+                        <a (click)="delete(employer._id)"  ><i class="bx bx-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   }
+    
+</div>
+<!-- end row -->

@@ -1,0 +1,29 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build Docker images
+      run: |
+        docker compose build
+    
+    - name: Start containers
+      run: |
+        docker compose up -d
+        sleep 10
+    
+    - name: Test backend health
+      run: |
+        curl -f http://localhost:4000/api/test
+    
+    - name: Test Gemini API
+      run: |
+        curl -X POST http://localhost:4000/api/chat -H "Content-Type: application/json" -d '{"message":"Test"}' --fail

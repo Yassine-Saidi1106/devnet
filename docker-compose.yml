@@ -1,0 +1,44 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: devnet-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - devnet-network
+
+  backend:
+    build: ./backend
+    container_name: devnet-backend
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - MONGO_URI=mongodb://mongodb:27017/grh100
+    depends_on:
+      - mongodb
+    networks:
+      - devnet-network
+
+  frontend:
+    build: ./frontend
+    container_name: devnet-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - devnet-network
+
+networks:
+  devnet-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
