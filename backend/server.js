@@ -20,10 +20,6 @@ app.use('/client', clientRoute);
 app.use('/user', userRoute);
 app.use('/project', projectRoute);
 
-// Ajouter après les autres routes
-const geminiRoute = require('./routes/gemini');
-app.use('/api', geminiRoute);
-
 app.use('/files', express.static('./uploads'));
 
 app.listen(4000, () => {
